@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Kelola Karyawan - SI Prodi MI</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/assets/vendors/jquery-bar-rating/css-stars.css" />
+    <link rel="stylesheet" href="/assets/vendors/font-awesome/css/font-awesome.min.css" />
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.print.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.4/css/buttons.dataTables.min.css">
+
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/assets/css/demo_2/style.css" />
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/assets/images/Logo Himma MI 2022.png" />
+    <script>
+        // Fungsi untuk cek status login
+        function checkLoginStatus() {
+            // Cek apakah sudah login berdasarkan nilai di sessionStorage
+            var isLoggedIn = sessionStorage.getItem('isLoggedIn');
+
+            if (isLoggedIn === 'true') {
+                // Pengguna sudah login, lakukan tindakan yang sesuai
+                // Get the username from sessionStorage
+                var username = sessionStorage.getItem('namaLoggedIn');
+
+                // Update the HTML element with the username
+                var usernameElement = document.getElementById('username');
+                usernameElement.innerHTML = username + ' <span class="font-13 online-color"><i class="mdi mdi-chevron-down"></i></span>';
+
+                // Validasi role lalu Redirect ke halaman utama admin atau PIC
+                if (sessionStorage.getItem('roleLoggedIn') == 'PIC') {
+                    window.location.href = '/pic/dashboard.html';
+                } else if (sessionStorage.getItem('roleLoggedIn') == 'Admin') {
+
+                }
+            } else {
+                // Pengguna belum login, lakukan tindakan yang sesuai
+                // Contoh: Redirect ke halaman login
+                window.location.href = '/';
+            }
+        }
+
+        // Panggil fungsi checkLoginStatus saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+
+    <style>
+        table {
+            border-top: none;
+            border-bottom: none;
+            background-color: #FFF;
+            white-space: nowrap;
+        }
+
+        .bottom-wrapper {
+            margin-top: 1em;
+        }
+
+        .btn:hover {
+            cursor: pointer;
+        }
+
+        #example_filter input.form-control {
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-scroller">
+    <!-- partial:partials/_horizontal-navbar.html -->
+    <div class="horizontal-menu">
+        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
+            <div class="container" style="flex-wrap: unset;">
+                <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                    <a href="/admin/dashboard.html">
+                        <img src="/assets/images/Logo Himma MI 2022.png" alt="logo" width="67px" height="60px" />
+                    </a>
+                </div>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                    <ul class="navbar-nav mr-lg-2 mt-2">
+                        <li class="nav-item nav-search d-none d-lg-block">
+                            <div class="input-group">
+                                <div class="input-group-prepend hover-cursor" id="navbar-search-icon"></div>
+                                <h4>SI Prodi MI</h4>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                                <div class="nav-profile-img">
+                                    <img src="/assets/images/faces/facesnobg.png" alt="image" />
+                                </div>
+                                <div class="nav-profile-text">
+                                    <p id="username" class="text-black font-weight-semibold m-0"> <span class="font-13 online-color"><i class="mdi mdi-chevron-down"></i></span></p>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="#" onclick="logout()">
+                                    <i class="mdi mdi-logout mr-2 text-primary"></i> Signout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <nav class="bottom-navbar">
+            <div class="container">
+                <ul class="nav page-navigation" style="justify-content: space-evenly;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/dashboard.html">
+                            <i class="mdi mdi-compass-outline menu-icon"></i>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/role.html">
+                            <i class="mdi mdi-account-key menu-icon"></i>
+                            <span class="menu-title">Role</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/kalenderEvent.html">
+                            <i class="mdi mdi-calendar menu-icon"></i>
+                            <span class="menu-title">Kalender Event</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/informasi.html">
+                            <i class="mdi mdi-information-outline menu-icon"></i>
+                            <span class="menu-title">Informasi</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/karyawan.html">
+                            <i class="mdi mdi-account-card-details menu-icon"></i>
+                            <span class="menu-title">Karyawan</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper" style="background: #dbdbdb;">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title">Karyawan</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Master</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Karyawan </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Open: Modal Tambah -->
+                                <div class="modal fade" id="modalTambah" tabindex="-1" role="dialog"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Tambah Karyawan</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <form action="/saveKaryawan" method="get">
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="npk">NPK</label>
+                                                        <input type="number" name="npk" class="form-control" id="npk"
+                                                               placeholder="NPK" required
+                                                               oninvalid="this.setCustomValidity('NPK Wajib Diisi')"
+                                                               oninput="this.setCustomValidity('')">
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="nama">Nama Karyawan</label>
+                                                        <input type="text" name="nama" class="form-control" id="nama"
+                                                               placeholder="Nama Karyawan" required
+                                                               oninvalid="this.setCustomValidity('Nama Karyawan Wajib Diisi')"
+                                                               oninput="this.setCustomValidity('')">
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="email">Email Karyawan</label>
+                                                        <input type="email" name="email" class="form-control" id="email"
+                                                               placeholder="Email Karyawan" required
+                                                               oninvalid="this.setCustomValidity('Email Karyawan Wajib Diisi')"
+                                                               oninput="this.setCustomValidity('')">
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="password">Password</label>
+                                                        <div class="input-group">
+                                                            <input type="password" name="password" class="form-control" id="password"
+                                                                   placeholder="Password" required
+                                                                   oninvalid="this.setCustomValidity('Password Wajib Diisi')"
+                                                                   oninput="this.setCustomValidity('')">
+                                                            <span class="input-group-text">
+                                                                <i class="mdi mdi-eye toggle-password" aria-hidden="true" style="cursor: pointer;"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="role">Role</label>
+                                                        <select class="form-control" name="role" id="role" required
+                                                                oninvalid="this.setCustomValidity('Role Wajib Diisi')"
+                                                                oninput="this.setCustomValidity('')">
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Close: Modal Tambah -->
+
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-striped text-center" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="1%" class="text-center">NPK</th>
+                                                <th>Nama</th>
+                                                <th>Email</th>
+                                                <th width="1%" class="text-center">Role</th>
+                                                <th width="1%" class="text-center">Status</th>
+                                                <th width="1%" class="text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial://partials/_footer.html -->
+            <footer class="footer" style="margin-top: 50px; background: #dbdbdb;">
+                <div class="container">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © Prodi MI 2023</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script type="text/javascript">
+    // Fungsi untuk logout
+    function logout() {
+        // Hapus status login dari sessionStorage
+        sessionStorage.removeItem('isLoggedIn');
+
+        // Redirect ke halaman login
+        window.location.href = '/';
+    }
+</script>
+<script language="JavaScript">
+    var url ='http://localhost:8080/getKaryawansAktif';
+
+    $('#example').DataTable({
+        "language": {
+            "emptyTable": "Tidak ada Data Karyawan",
+            "zeroRecords": "Tidak ada Data Karyawan"
+        },
+        "dom": 'Bfrti<"bottom-wrapper"p>',
+        scrollX: true,
+        "bLengthChange": false,
+        "bInfo": false,
+        "pageLength": 10,
+        "buttons": [
+            {
+                text: '<i class="mdi mdi-plus-circle-outline menu-icon"></i>',
+                className: 'btn btn-sm btn-outline-primary',
+                action: function(e, dt, node, config) {
+                    $('#modalTambah').modal('show');
+                },
+                attr: {
+                    'data-toggle': 'modal',
+                    'data-mode': 'tambah',
+                    'data-target': '#modalTambah'
+                },
+                init: function(api, node, config) {
+                    $(node).removeClass('dt-button');
+                }
+            },
+        ]
+    });
+
+    var table = $('#example').DataTable();
+
+    $(document).ready(function (){
+        $(".toggle-password").click(function() {
+            $(this).toggleClass("mdi-eye mdi-eye-off");
+            var input = $($(this).parent().prev("input"));
+
+            if(input.attr("type") === "password"){
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+
+        $.getJSON(url, function (json){
+            // Array to store all the promises for getting role data
+            var promises = [];
+
+            for (var i = 0; i < json.length; i++) {
+                // Wrap the asynchronous call in a function to capture the correct value of 'i'
+                (function (i) {
+                    // Push the promise returned by $.getJSON into the promises array
+                    promises.push(
+                        $.getJSON('http://localhost:8080/getRole', { idRole: json[i].id_role })
+                    );
+                })(i);
+            }
+
+            // Use Promise.all to wait for all the asynchronous calls to complete
+            Promise.all(promises).then(function (roles) {
+                for (var i = 0; i < json.length; i++) {
+                    var role = roles[i];
+                    var rowData = [
+                        json[i].npk,
+                        json[i].nama,
+                        json[i].email,
+                        role.namaRole,
+                        json[i].status,
+                        "<button type='button' class='btn btn-sm btn-outline-warning' data-id='" + json[i].npk + "' " +
+                        "data-idrole='" + json[i].id_role + "' data-role='" + role.namaRole + "' data-toggle='modal' data-mode='edit' data-target='#modalTambah'" +
+                        "data-nama='" + json[i].nama + "' data-email='" + json[i].email + "'>" +
+                        "<i class='mdi mdi-pencil-box-outline menu-icon'></i></button> &nbsp;" +
+                        "<button type='button' class='btn btn-sm btn-outline-danger remove' data-npk='" + json[i].npk + "'><i class='mdi mdi-delete-variant menu-icon'></i></button>",
+                    ];
+
+                    table.row.add(rowData);
+                }
+
+                // Redraw the table after all data is added
+                table.order([0, "asc"]).draw();
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    // Memperoleh nilai data-role dari tombol edit saat diklik
+    $(document).on('click', 'button[data-target="#modalTambah"]', function() {
+        var mode = $(this).data('mode');
+        var form = $('#modalTambah').find('form');
+        console.log('edit');
+        var modalTitle = $('#modalTambah').find('.modal-title');
+        var submitButton = $('#modalTambah').find('button[type="submit"]');
+
+        // Lakukan penanganan khusus sesuai dengan id tombol yang diklik
+        if (mode === "tambah") {
+            // Penanganan untuk tombol "Tambah"
+            form.attr('action', '/saveKaryawan');
+            modalTitle.text("Tambah Karyawan");
+            submitButton.text("Simpan");
+
+            var url = 'http://localhost:8080/getRolesAktif';
+            var select = $('#role');
+            $('#npk').prop('readonly', false).val(null);
+            $('#nama').prop('readonly', false).val(null);
+            $('#email').val(null);
+
+            $.getJSON(url, function(data) {
+                // Menghapus opsi yang ada sebelumnya
+                select.empty();
+
+                // Menambahkan opsi default
+                select.append('<option value="" selected>-- Pilih Role --</option>');
+
+                // Menambahkan opsi-opsi dari respons API
+                data.forEach(function(role) {
+                    select.append('<option value="' + role.idRole + '">' + role.namaRole + '</option>');
+                });
+            });
+        } else if (mode === "edit") {
+            // Penanganan untuk tombol "Edit"
+            form.attr('action', '/updateKaryawan');
+            modalTitle.text("Edit Karyawan");
+            submitButton.text("Ubah");
+
+            var roleValue = $(this).data('idrole');
+            var idKaryawan = $(this).data('id');
+            var nama = $(this).data('nama');
+            var email = $(this).data('email');
+
+            var url = 'http://localhost:8080/getRolesAktif';
+            var select = $('#role');
+
+            $('#npk').val(idKaryawan);
+            $('#npk').prop('readonly', true);
+            $('#nama').val(nama);
+            $('#nama').prop('readonly', true);
+            $('#email').val(email);
+            $('#password').prop('required', false);
+
+            $.getJSON(url, function(data) {
+                // Menghapus opsi yang ada sebelumnya
+                select.empty();
+
+                // Menambahkan opsi default
+                select.append('<option value="">-- Pilih Role --</option>');
+
+                // Menambahkan opsi-opsi dari respons API
+                data.forEach(function(role) {
+                    if (roleValue == role.idRole) {
+                        select.append('<option value="' + role.idRole + '" selected>' + role.namaRole + '</option>');
+                    } else {
+                        select.append('<option value="' + role.idRole + '">' + role.namaRole + '</option>');
+                    }
+                });
+            });
+        }
+    });
+
+    $(document).on("click", ".remove", function () {
+        var npk = $(this).data('npk');
+        // console.log(id);
+
+        Swal.fire({
+            text: 'Apakah anda yakin menghapus Karyawan?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#5cb85c',
+            cancelButtonColor: '#d9534f',
+            confirmButtonText: 'Ya Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "http://localhost:8080/deleteKaryawan?npk=" + encodeURIComponent(npk),
+                    method: "DELETE"
+                });
+
+                Swal.fire({
+                    text: 'Karyawan berhasil dihapus',
+                    type: 'success',
+                    icon: 'success'
+                }).then(okay => {
+                    if (okay) {
+                        window.location.href = "http://localhost:8080/admin/karyawan.html"
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    text: 'Karyawan batal dihapus',
+                    type: 'error',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="/assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="/assets/vendors/jquery-bar-rating/jquery.barrating.min.js"></script>
+<script src="/assets/vendors/chart.js/Chart.min.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.resize.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.categories.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.fillbetween.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.stack.js"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="/assets/js/off-canvas.js"></script>
+<script src="/assets/js/hoverable-collapse.js"></script>
+<script src="/assets/js/misc.js"></script>
+<script src="/assets/js/settings.js"></script>
+<script src="/assets/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<script src="/assets/js/dashboard.js"></script>
+<!-- End custom js for this page -->
+</body>
+</html>

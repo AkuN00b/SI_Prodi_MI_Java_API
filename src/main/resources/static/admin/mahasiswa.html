@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Kelola Mahasiswa - SI Prodi MI</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/assets/vendors/jquery-bar-rating/css-stars.css" />
+    <link rel="stylesheet" href="/assets/vendors/font-awesome/css/font-awesome.min.css" />
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/assets/css/demo_2/style.css" />
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/assets/images/Logo Himma MI 2022.png" />
+    <script>
+        // Fungsi untuk cek status login
+        function checkLoginStatus() {
+            // Cek apakah sudah login berdasarkan nilai di sessionStorage
+            var isLoggedIn = sessionStorage.getItem('isLoggedIn');
+
+            if (isLoggedIn === 'true') {
+                // Pengguna sudah login, lakukan tindakan yang sesuai
+            } else {
+                // Pengguna belum login, lakukan tindakan yang sesuai
+                // Contoh: Redirect ke halaman login
+                window.location.href = '/';
+            }
+        }
+
+        // Panggil fungsi checkLoginStatus saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</head>
+<body>
+<div class="container-scroller">
+    <!-- partial:partials/_horizontal-navbar.html -->
+    <div class="horizontal-menu">
+        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
+            <div class="container" style="flex-wrap: unset;">
+                <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                    <a href="/admin/dashboard.html">
+                        <img src="/assets/images/Logo Himma MI 2022.png" alt="logo" width="67px" height="60px" />
+                    </a>
+                </div>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                    <ul class="navbar-nav mr-lg-2 mt-2">
+                        <li class="nav-item nav-search d-none d-lg-block">
+                            <div class="input-group">
+                                <div class="input-group-prepend hover-cursor" id="navbar-search-icon"></div>
+                                <h4>SI Prodi MI</h4>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                                <div class="nav-profile-img">
+                                    <img src="/assets/images/faces/facesnobg.png" alt="image" />
+                                </div>
+                                <div class="nav-profile-text">
+                                    <p class="text-black font-weight-semibold m-0"> Olson jass <span class="font-13 online-color"><i class="mdi mdi-chevron-down"></i></span></p>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="#" onclick="logout()">
+                                    <i class="mdi mdi-logout mr-2 text-primary"></i> Signout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <nav class="bottom-navbar">
+            <div class="container">
+                <ul class="nav page-navigation" style="justify-content: space-evenly;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/dashboard.html">
+                            <i class="mdi mdi-compass-outline menu-icon"></i>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/role.html">
+                            <i class="mdi mdi-account-key menu-icon"></i>
+                            <span class="menu-title">Role</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/kalenderEvent.html">
+                            <i class="mdi mdi-calendar menu-icon"></i>
+                            <span class="menu-title">Kalender Event</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/informasi.html">
+                            <i class="mdi mdi-information-outline menu-icon"></i>
+                            <span class="menu-title">Informasi</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/mahasiswa.html">
+                            <i class="mdi mdi-account menu-icon"></i>
+                            <span class="menu-title">Mahasiswa</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/karyawan.html">
+                            <i class="mdi mdi-account-card-details menu-icon"></i>
+                            <span class="menu-title">Karyawan</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title">Mahasiswa</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Master</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Mahasiswa </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>NIM</th>
+                                            <th>Nama</th>
+                                            <th>Email</th>
+                                            <th>Kelas</th>
+                                            <th>Tanggal Registrasi</th>
+                                            <th>Status</th>
+                                            <th width="1%" colspan="2">Aksi</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial://partials/_footer.html -->
+            <footer class="footer" style="margin-top: 50px;">
+                <div class="container">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © Prodi MI 2023</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script type="text/javascript">
+    // Fungsi untuk logout
+    function logout() {
+        // Hapus status login dari sessionStorage
+        sessionStorage.removeItem('isLoggedIn');
+
+        // Redirect ke halaman login
+        window.location.href = '/';
+    }
+</script>
+<script language="JavaScript">
+    var url ='http://localhost:8080/getMahasiswasAktif';
+    $(document).ready(function (){
+        $.getJSON(url,
+            function (json){
+                var tr;
+                for(var i=0; i<json.length; i++){
+                    tr = $('<tr/>');
+                    tr.append("<td>"+json[i].nim + "</td>");
+                    tr.append("<td>"+json[i].nama + "</td>");
+                    tr.append("<td>"+json[i].email + "</td>");
+                    tr.append("<td>"+json[i].kelas + "</td>");
+
+                    // Mengubah format tanggal registrasi
+                    var registerDate = new Date(json[i].register_date);
+                    var formattedDate = registerDate.getDate() + " " + getMonthName(registerDate.getMonth()) + " " + registerDate.getFullYear();
+                    tr.append("<td>"+formattedDate + "</td>");
+
+                    tr.append("<td>"+json[i].status + "</td>");
+                    tr.append("<td><button type='button' class='btn btn-md btn-outline-danger remove' data-nim='" + json[i].nim + "'><i class='mdi mdi-delete-variant menu-icon'></i></button></td>");
+
+                    $('table').append(tr);
+                }
+            });
+
+        // Fungsi untuk mendapatkan nama bulan
+        function getMonthName(monthIndex) {
+            var monthNames = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            return monthNames[monthIndex];
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).on("click", ".remove", function () {
+        var nim = $(this).data('nim');
+        // console.log(id);
+        Swal.fire({
+            text: 'Apakah anda yakin menghapus Mahasiswa?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#5cb85c',
+            cancelButtonColor: '#d9534f',
+            confirmButtonText: 'Ya Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "http://localhost:8080/deleteMahasiswa?nim=" + encodeURIComponent(nim),
+                    method: "DELETE",
+                    success: function () {
+                        Swal.fire({
+                            text: 'Mahasiswa berhasil dihapus',
+                            type: 'success',
+                            icon: 'success'
+                        }).then(okay => {
+                            if (okay) {
+                                window.location.href = "http://localhost:8080/admin/mahasiswa.html";
+                            }
+                        });
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    text: 'Mahasiswa batal dihapus',
+                    type: 'error',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="/assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="/assets/vendors/jquery-bar-rating/jquery.barrating.min.js"></script>
+<script src="/assets/vendors/chart.js/Chart.min.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.resize.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.categories.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.fillbetween.js"></script>
+<script src="/assets/vendors/flot/jquery.flot.stack.js"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="/assets/js/off-canvas.js"></script>
+<script src="/assets/js/hoverable-collapse.js"></script>
+<script src="/assets/js/misc.js"></script>
+<script src="/assets/js/settings.js"></script>
+<script src="/assets/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<script src="/assets/js/dashboard.js"></script>
+<!-- End custom js for this page -->
+</body>
+</html>
